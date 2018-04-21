@@ -49,4 +49,13 @@ describe('Updating records', () => {
       doneCb
     );
   })
+
+  it('A user can have their postcount incremented by 1', (doneCb) => {
+    User.update({ name: 'Anna' }, { $inc: { likes: 10 } })
+      .then(() => User.findOne({ name: 'Anna' }))
+      .then((user) => {
+        assert(user.likes === 10);
+        doneCb();
+      });
+  });
 });

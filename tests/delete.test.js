@@ -1,49 +1,49 @@
 const assert = require('assert');
 const User = require('../src/user');
 
-describe('Deleting user', () => {
+describe('Deleting a user', () => {
+  let joe;
 
-    let kyle;
-    beforeEach((doneCb) => {
-        kyle = new User({ name: 'kyle' });
-        kyle.save().then(() => {
-            doneCb();
-        })
-    })
+  beforeEach((done) => {
+    joe = new User({ name: 'Joe' });
+    joe.save()
+      .then(() => done());
+  });
 
-    it('shoudl remove a user', (doneCb) => {
+  it('model instance remove', (done) => {
+    joe.remove()
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        assert(user === null);
+        done();
+      });
+  });
 
-        kyle.remove().then(() => User.findOne({ name: 'kyle' }))
-            .then((user) => {
-                assert(!user)
-                doneCb();
-            }).catch(err => {
-                console.log(err);
-                doneCb();
-            })
-    });
+  it('class method remove', (done) => {
+    // Remove a bunch of records with some given criteria
+    User.remove({ name: 'Joe' })
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        assert(user === null);
+        done();
+      });
+  });
 
-    it('shoudl remove a user', (doneCb) => {
-        User.remove({name:'kyle'})
-            .then(() => User.findOne({ name: 'kyle' }))
-            .then((user) => {
-                assert(!user)
-                doneCb();
-            }).catch(err => {
-                console.log(err);
-                doneCb();
-            })
-    });
+  it('class method findOneAndRemove', (done) => {
+    User.findOneAndRemove({ name: 'Joe' })
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        assert(user === null);
+        done();
+      });
+  });
 
-    it('shoudl remove a user', (doneCb) => {
-        User.findByIdAndRemove(kyle._id)
-            .then(() => User.findOne({ name: 'kyle' }))
-            .then((user) => {
-                assert(!user)
-                doneCb();
-            }).catch(err => {
-                console.log(err);
-                doneCb();
-            })
-    });
+  it('class method findByIdAndRemove', (done) => {
+    User.findByIdAndRemove(joe._id)
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        assert(user === null);
+        done();
+      });
+  });
 });
